@@ -116,5 +116,8 @@ if __name__ == "__main__":
     output_file = 'Generated/dark_horse.mid'
 
     state_mat = midiToNoteStateMatrix(input_file)
-    print state_mat
+    print "size", len(state_mat)
+    print state_mat[0:5]
+    #for row in state_mat:
+    #    print len(row)
     noteStateMatrixToMidi(state_mat, output_file)
