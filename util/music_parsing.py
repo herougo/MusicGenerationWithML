@@ -84,8 +84,8 @@ class NoteSequence():
 		time_intervals[counter][1] = time_intervals[counter][1], intRoundUp(self.ppqn)
 
 		# make start times on the beat
-		for i in range(len(note_lists)):
-			time_intervals[counter][0] = intRoundUp(time_intervals[counter][0], ppqn)
+		#for i in range(len(note_lists)):
+		#	time_intervals[counter][0] = intRoundUp(time_intervals[counter][0], ppqn)
 
 		# make the end times of chord the start time of the next chord
 		for i in range(len(note_lists) - 1):
