@@ -16,11 +16,12 @@ class NoteSequence():
 		self.epsilon = ppqn / 4
 
 	def addNote(self, note_midi, start_time, end_time):
-		notes.append([note_midi, start_time, end_time])
+		self.notes.append([note_midi, start_time, end_time])
 		self.length = max(end_time, self.length)
 
 	def _cleanNotesAndLength(self):
-		self.notes = sorted(self.notes)
+		# sort by start time (index 1)
+		self.notes = sortUsingIndex(self.notes, 1)
 		self.length = intRoundUp(self.length, self.ppqn)
 
 	def toMelody(self):
@@ -33,9 +34,10 @@ class NoteSequence():
 		melody_time_intervals = []
 
 		prev_note = self.notes[0]
+
 		for note in self.notes[1:]:
 			pause_btn_notes = note[1] - prev_note[2]
-			cgGe(pause_btn_notes, 0, "melody overlap")
+			chGe(note[1], prev_note[2], "melody overlap")
 
 			if pause_btn_notes <= self.epsilon:
 				prev_note[2] = note[1]
@@ -64,13 +66,12 @@ class NoteSequence():
 		prev_end = 0
 		time_intervals = []
 		note_lists = []
-		counter = 0
-
+		counter = -1
 
 		for note in self.notes:
 			note_start = note[1]
 			
-			if note_start > prev_end:
+			if note_start >= prev_end:
 				prev_end = note[2]
 				counter += 1
 				time_intervals.append(note[1:3])
@@ -81,7 +82,7 @@ class NoteSequence():
 
 				note_lists[counter].append(note[0])
 
-		time_intervals[counter][1] = time_intervals[counter][1], intRoundUp(self.ppqn)
+		time_intervals[counter][1] = intRoundUp(time_intervals[counter][1], self.ppqn)
 
 		# make start times on the beat
 		#for i in range(len(note_lists)):
@@ -120,24 +121,21 @@ class Song():
 
 		harmony_seq = self._parseTrack(mid.tracks[1])
 		self.chords, self.chord_time_intervals = harmony_seq.toHarmony()
-		
-		return notes
 
 	def _parseTrack(self, track):
 		seq = NoteSequence(self.ppqn)
 		acc_time = 0
-		track = mid.tracks[0]
 		note_starts = {}
 
 		for msg in track:
-			if msg.type == 'note_off' or (msg.type == 'note_on' and msg.veloctiy==0):
+			if msg.type == 'note_off' or (msg.type == 'note_on' and msg.velocity==0):
 				# (note_off is equivalent to note_on with 0 velocity)
 				# (note that midi files can play notes then leave a brief rest before the next note
 				#  which isn't explicitly marked as a rest)
 				#print msg.velocity, msg.note, msg.time
 
 				acc_time += msg.time
-				chNotIn(msg.note, note_starts.keys(), "note")
+				chIn(msg.note, note_starts.keys(), "note_off")
 
 				seq.addNote(msg.note, note_starts[msg.note], acc_time)
 
@@ -154,8 +152,8 @@ class Song():
 				#       the units are ticks
 
 				acc_time += msg.time
-				chIn(msg.note, note_starts.keys(), "note")
-				note_starts[msg.note] == acc_time
+				chNotIn(msg.note, note_starts.keys(), "note_on")
+				note_starts[msg.note] = acc_time
 
 
 				#elif msg.type == 'program_change':
@@ -169,7 +167,7 @@ class Song():
 				#print msg.key_signature
 				# can be 'Dbm' for D flat minor
 				# default 'C' for C major
-				self.key_sig = msg.key_signature
+				self.key_sig = msg.key
 
 			elif msg.type == 'time_signature':
 				#print msg.numerator, msg.denominator, msg.clocks_per_click
@@ -183,12 +181,12 @@ class Song():
 				self.time_sig = [msg.numerator, msg.denominator]
 
 			elif msg.type == 'set_tempo':
-				#print msg.set_tempo
+				#print msg.tempo
 				# possible: 0 ... 16777215
 				# default: 500 000
 				# this means 500 000 microseconds (0.5 s) per beat (quarter note)
 				# thus the default is 120 BMP (beats per minute)
-				self.bpm = int((60 * 1000 * 1000) / tempo)
+				self.bpm = int((60 * 1000 * 1000) / msg.tempo)
 		
 		chEq(len(note_starts.keys()), 0, "note_dictionary_empty")
 
@@ -198,7 +196,7 @@ class Song():
 		mid = MidiFile()
 		mid.ticks_per_beat = self.ppqn
 
-		raise NotImplementedException()
+		#raise NotImplementedException()
 
 		# Melody
 		melody_track = MidiTrack()
@@ -257,6 +255,13 @@ class Song():
 	
 
 if __name__ == "__main__":
+	midi_path = '/home/henri/Documents/Git/MusicGenerationWithML/data/midi/my_data/6Teen_Theme.mid'
+	song = Song()
+	song.loadFromMidi(midi_path)
+
+	song.toMidi('generated_theme.mid')
+
+	raise Exception("hi")
 	mypath = "siraj-music"
 	siraj_files = [os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
 	siraj_files = filter(lambda x: x.endswith(".midi"), siraj_files)

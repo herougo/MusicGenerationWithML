@@ -41,3 +41,10 @@ def sampleSubset(n, k, weights=[]):
 		return np.random.choice(n, k, replace=False)
 	else:
 		return np.random.choice(n, k, replace=False, p=weights)
+
+def itemGetter(index):
+	return lambda x : x[index]
+
+# Purpose: sort list of lists by the value in the specified index
+def sortUsingIndex(arr, index=0):
+	return sorted(arr, key=itemGetter(index))
