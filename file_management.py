@@ -1,3 +1,12 @@
 from util.file_index import FileIndex
+import os
 
-midi_index = FileIndex()
+GIT_REPO_PATH = os.path.dirname(os.path.abspath(__file__))
+
+os.chdir(GIT_REPO_PATH)
+
+_input_dir = 'data/midi'
+_index_dir = 'data'
+_file_name = 'MUSICFILEINDEX.csv'
+
+midi_index = FileIndex(_input_dir, _index_dir, _file_name)
