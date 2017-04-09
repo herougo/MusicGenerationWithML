@@ -3,9 +3,6 @@ import os
 from other_util import *
 from music_theory import Harmony
 
-def intRoundUp(n, mod):
-	return (n + mod - 1) % mod
-
 class NoteSequence():
 	def __init__(self, ppqn):
 		self.ppqn = ppqn
@@ -48,12 +45,17 @@ class NoteSequence():
 				else:
 					raise Exception("No MIDI end adjusting")
 
+			#chLe(prev_note[1], prev_note[2], "toMelody interval")
+
 			melody.append(prev_note[0])
 			melody_time_intervals.append(prev_note[1:3])
+			prev_note = note
 
 		prev_note[2] = intRoundUp(prev_note[2], self.epsilon)
 		melody.append(prev_note[0])
 		melody_time_intervals.append(prev_note[1:3])
+
+		#chLe(prev_note[1], prev_note[2], "toMelody interval")
 
 		return melody, melody_time_intervals
 
@@ -94,6 +96,8 @@ class NoteSequence():
 
 		chords = map(lambda x: Harmony(note_list=x), note_lists)
 
+		for t in time_intervals:
+			print t
 
 		return chords, time_intervals
 
@@ -209,15 +213,16 @@ class Song():
 		melody_track.append(Message('program_change', channel=1, program=1, time=0))
 
 		current_time = 0
-		for note, time in zip(self.melody, self.melody_time_intervals):
-			wait_delta = int(time[0] - current_time)
-			note_length = int(time[1] - time[0])
-			chGe(wait_delta, 0, "toMidi time nonnegative 1")
-			chGe(note_length, 0, "toMidi time nonnegative 2")
+		
+		for note, time_interval in zip(self.melody, self.melody_time_intervals):
+			wait_delta = int(time_interval[0] - current_time)
+			note_length = int(time_interval[1] - time_interval[0])
+			chGe(time_interval[0], current_time, "toMidi time nonnegative 1")
+			chGe(time_interval[1], time_interval[0], "toMidi time nonnegative 2")
 
 			melody_track.append(Message('note_on', note=note, velocity=64, time=wait_delta))
 			melody_track.append(Message('note_off', note=note, velocity=64, time=note_length))
-			current_time = time[1]
+			current_time = time_interval[1]
 
 		melody_track.append(MetaMessage('end_of_track'))
 
@@ -233,10 +238,10 @@ class Song():
 
 		current_time = 0
 		for chord, time_interval in zip(self.chords, self.chord_time_intervals):
-			wait_delta = int(time[0] - current_time)
-			note_length = int(time[1] - time[0])
-			chGe(wait_delta, 0, "toMidi time nonnegative 3")
-			chGe(note_length, 0, "toMidi time nonnegative 4")
+			wait_delta = int(time_interval[0] - current_time)
+			note_length = int(time_interval[1] - time_interval[0])
+			chGe(time_interval[0], current_time, "toMidi time nonnegative 3")
+			chGe(time_interval[1], time_interval[0], "toMidi time nonnegative 4")
 			note_list = chord.getLhChord()
 
 			harmony_track.append(Message('note_on', note=note_list[0], velocity=64, time=wait_delta))
@@ -247,7 +252,7 @@ class Song():
 			for note in note_list[1:]:
 				harmony_track.append(Message('note_off', note=note, velocity=64, time=0))
 
-			current_time = time[1]
+			current_time = time_interval[1]
 
 
 		harmony_track.append(MetaMessage('end_of_track'))
@@ -263,7 +268,7 @@ def _tests():
 	song = Song()
 	song.loadFromMidi(midi_path)
 
-	song.toMidi('generated_theme.mid')
+	song.toMidi('test_theme.mid')
 
 	raise Exception("hi")
 	mypath = "siraj-music"

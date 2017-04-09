@@ -12,6 +12,12 @@ def chGe(x, y, error_type):
 		message = "{} error: {} < {}".format(error_type, x, y)
 		raise Exception(message)
 
+# Check Greater than or Equal to
+def chLe(x, y, error_type):
+	if x > y:
+		message = "{} error: {} > {}".format(error_type, x, y)
+		raise Exception(message)
+
 def chNotIn(val, my_collection, error_type):
 	if val in my_collection:
 		message = "{} error: {} in {}".format(error_type, val, my_collection)
@@ -48,3 +54,6 @@ def itemGetter(index):
 # Purpose: sort list of lists by the value in the specified index
 def sortUsingIndex(arr, index=0):
 	return sorted(arr, key=itemGetter(index))
+
+def intRoundUp(n, mod):
+	return ((n + mod - 1) / mod) * mod
