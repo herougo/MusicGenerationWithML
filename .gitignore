@@ -47,4 +47,5 @@ Temporary Items
 .apdisk
 
 *.pyc
+*/*.pyc
 util/file_index.py
