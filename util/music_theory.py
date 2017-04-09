@@ -5,7 +5,7 @@ MIDI_MIDDLE_C = 60
 
 
 MIDI_NUM_TO_NOTE = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-NOTE_TO_LH_TONIC = {
+NOTE_TO_LH_ROOT = {
 	'C': 48, 
 	'C#': 49, 
 	'D': 50, 
@@ -25,8 +25,8 @@ SUPPORTED_QUALITIES = {
 	# aug, dim, dom7, dim7
 }
 
-def noteToLhTonic(midi_note):
-	return NOTE_TO_LH_TONIC[midi_note]
+def noteToLhRoot(midi_note):
+	return NOTE_TO_LH_ROOT[midi_note]
 
 def midiNumToNote(n):
 	# 60 is C
@@ -34,14 +34,16 @@ def midiNumToNote(n):
 
 
 class Harmony():
-	def __init__(self, tonic='C', quality='+', note_list=[]):
+	def __init__(self, root='C', quality='+', note_list=[]):
 		if len(note_list) > 0:
-			self.loadNoteList(note_list)
+			if not self.loadNoteList(note_list):
+				english_note_list = map(midiNumToNote, note_list)
+				raise NotImplementedError((note_list, english_note_list))
 		else:
-			self.tonic = tonic
+			self.root = root
 			self.quality = quality
 			if quality not in SUPPORTED_QUALITIES.keys():
-				raise NoteImplementedError()
+				raise NotImplementedError()
 
 	# note list uses the MIDI numbers
 	def loadNoteList(self, note_list):
@@ -60,10 +62,10 @@ class Harmony():
 				# if the number of notes don't match for the quality 
 				continue
 
-			for i in range(n_notes-1):
+			for i in range(n_notes):
 				if np.all(note_list_diff[i:i+n_notes-1] == quality_diff):
 					chord = note_list[i:i+n_notes]
-					self.tonic = midiNumToNote(chord[0])
+					self.root = midiNumToNote(chord[0])
 					self.quality = k
 
 					return True
@@ -72,20 +74,19 @@ class Harmony():
 
 
 	def getLhChord(self):
-		tonic_midi_num = NOTE_TO_LH_TONIC[self.tonic]
-		return tonic_midi_num + SUPPORTED_QUALITIES[self.quality]
+		root_midi_num = NOTE_TO_LH_ROOT[self.root]
+		return root_midi_num + SUPPORTED_QUALITIES[self.quality]
 
 	def fitChord(self, midi_note):
 		return (midi_note) % 12 in (self.getLhChord() % 12)
 
 		
 
-
-if __name__ == "__main__":
+def _tests():
 	c_note_list = [48, 52, 55]
 	har = Harmony(note_list=c_note_list)
 	har.loadNoteList(c_note_list)
-	print har.tonic, har.quality
+	print har.root, har.quality
 	lh_chord = har.getLhChord()
 	
 	for x, y in zip(lh_chord, c_note_list):
@@ -94,10 +95,13 @@ if __name__ == "__main__":
 
 	c_minor_note_list = [48, 51, 55]
 	har.loadNoteList(c_minor_note_list)
-	print har.tonic, har.quality
+	print har.root, har.quality
 	lh_chord = har.getLhChord()
 	
 	for x, y in zip(lh_chord, c_minor_note_list):
 		chEq(x, y, "lh_chord")
 		chEq(har.fitChord(y), True, "fitChord")
+
+if __name__ == "__main__":
+	_tests()
 

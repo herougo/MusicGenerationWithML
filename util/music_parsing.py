@@ -210,8 +210,10 @@ class Song():
 
 		current_time = 0
 		for note, time in zip(self.melody, self.melody_time_intervals):
-			wait_delta = time[0] - current_time
-			note_length = time[1] - time[0]
+			wait_delta = int(time[0] - current_time)
+			note_length = int(time[1] - time[0])
+			chGe(wait_delta, 0, "toMidi time nonnegative 1")
+			chGe(note_length, 0, "toMidi time nonnegative 2")
 
 			melody_track.append(Message('note_on', note=note, velocity=64, time=wait_delta))
 			melody_track.append(Message('note_off', note=note, velocity=64, time=note_length))
@@ -231,8 +233,10 @@ class Song():
 
 		current_time = 0
 		for chord, time_interval in zip(self.chords, self.chord_time_intervals):
-			wait_delta = time[0] - current_time
-			note_length = time[1] - time[0]
+			wait_delta = int(time[0] - current_time)
+			note_length = int(time[1] - time[0])
+			chGe(wait_delta, 0, "toMidi time nonnegative 3")
+			chGe(note_length, 0, "toMidi time nonnegative 4")
 			note_list = chord.getLhChord()
 
 			harmony_track.append(Message('note_on', note=note_list[0], velocity=64, time=wait_delta))
@@ -254,7 +258,7 @@ class Song():
 		pass
 	
 
-if __name__ == "__main__":
+def _tests():
 	midi_path = '/home/henri/Documents/Git/MusicGenerationWithML/data/midi/my_data/6Teen_Theme.mid'
 	song = Song()
 	song.loadFromMidi(midi_path)
@@ -275,3 +279,6 @@ if __name__ == "__main__":
 		break
 
 	print arr
+
+if __name__ == "__main__":
+	_tests()
