@@ -6,8 +6,7 @@ from util.other_util import filterNonnegative, nonnegativeIndices, skewness
 
 # Assume we have array of size 5*4*16 = 320 sixteenth note beats
 def extractFeatures(key, sixteenth_arr, chord_arr):
-	if 
-    # assume we have *********************
+	# assume we have *********************
     filtered_note_arr = filterNonnegative(sixteenth_arr)
     filtered_note_indices = nonnegativeIndices(sixteenth_arr)
 
