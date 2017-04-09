@@ -96,9 +96,6 @@ class NoteSequence():
 
 		chords = map(lambda x: Harmony(note_list=x), note_lists)
 
-		for t in time_intervals:
-			print t
-
 		return chords, time_intervals
 
 
