@@ -1,3 +1,3 @@
-from util.FileIndex import FileIndex
+from util.file_index import FileIndex
 
-file_index = FileIndex()
+midi_index = FileIndex()
