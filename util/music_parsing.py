@@ -89,7 +89,7 @@ class NoteSequence():
 
 		# make the end times of chord the start time of the next chord
 		for i in range(len(note_lists) - 1):
-			time_intervals[i][1] = ime_intervals[i+1][0]
+			time_intervals[i][1] = time_intervals[i+1][0]
 
 		chords = map(lambda x: Harmony(note_list=x), note_lists)
 
@@ -109,21 +109,21 @@ class Song():
 		self.instrument = 1 # always piano
 		self.ppqn = 480
 
-	def loadMidi(self, file_name):
+	def loadFromMidi(self, file_name):
 		mid = MidiFile(file_name)
 		self.ppqn = mid.ticks_per_beat # ie pulses per quarter note
 
 		chGe(len(mid.tracks), 2, "n_tracks")
 
-		melody_seq = self.parseTrack(mid.tracks[0])
+		melody_seq = self._parseTrack(mid.tracks[0])
 		self.melody, self.melody_time_intervals = melody_seq.toMelody()
 
-		harmony_seq = self.parseTrack(mid.tracks[1])
+		harmony_seq = self._parseTrack(mid.tracks[1])
 		self.chords, self.chord_time_intervals = harmony_seq.toHarmony()
 		
 		return notes
 
-	def parseTrack(self, track):
+	def _parseTrack(self, track):
 		seq = NoteSequence(self.ppqn)
 		acc_time = 0
 		track = mid.tracks[0]
@@ -265,7 +265,7 @@ if __name__ == "__main__":
 		output_path = os.path.join("Generated/", base_name)
 
 		song = Song()
-		song.loadMidi(f)
+		song.loadFromMidi(f)
 		song.toMidi(output_path)
 		break
 
