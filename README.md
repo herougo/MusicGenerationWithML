@@ -7,7 +7,8 @@ All code was written by me except for the code in the "unused folder".
 To Do
 - [x] Understand the MIDI file format
 - [x] Write a MIDI parser
-- [ ] debug the MIDI parser and organize the data set
+- [x] debug the MIDI parser
+- [ ] organize the data set
 - [ ] implement features for a music rating predictor and train the model
 - [ ] implement an RL model for choosing a rhythm and train the model
 - [ ] implement an RL model for choosing a melody given a rhythm and train the model

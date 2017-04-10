@@ -3,6 +3,10 @@ import os
 from other_util import *
 from music_theory import Harmony
 
+def checkTimeSig(time_sig):
+	if time_sig != [4, 4]:
+		raise NotImplementedException("new time signature: {}".format(time_sig))
+
 class NoteSequence():
 	def __init__(self, ppqn):
 		self.ppqn = ppqn
@@ -111,17 +115,38 @@ class Song():
 		self.instrument = 1 # always piano
 		self.ppqn = 480
 
+		self.pulse_len = 0
+		self.bar_len = self.ppqn * 4
+
 	def loadFromMidi(self, file_name):
 		mid = MidiFile(file_name)
 		self.ppqn = mid.ticks_per_beat # ie pulses per quarter note
 
 		chGe(len(mid.tracks), 2, "n_tracks")
 
+		# parse tracks
 		melody_seq = self._parseTrack(mid.tracks[0])
 		self.melody, self.melody_time_intervals = melody_seq.toMelody()
 
 		harmony_seq = self._parseTrack(mid.tracks[1])
 		self.chords, self.chord_time_intervals = harmony_seq.toHarmony()
+
+		# update length
+		if len(self.melody_time_intervals) > 0:
+			self.pulse_len = max(self.melody_time_intervals[-1][1], self.pulse_len)
+
+		if len(self.chord_time_intervals) > 0:
+			self.pulse_len = max(self.chord_time_intervals[-1][1], self.pulse_len)
+
+		self._updateBarLen()
+		self.pulse_len = intRoundUp(self.pulse_len, self.bar_len)
+
+
+	def _updateBarLen(self):
+		checkTimeSig(self.time_sig)
+
+		self.bar_len = self.ppqn * self.time_sig[0]
+
 
 	def _parseTrack(self, track):
 		seq = NoteSequence(self.ppqn)
@@ -178,6 +203,9 @@ class Song():
 				# I'm not sure how to handle other clocks_per_click and notated_32nd_notes_per_beat values
 				chEq(msg.clocks_per_click, 24, "clocks_per_tick")
 				chEq(msg.notated_32nd_notes_per_beat, 8, "notated_32nd_notes_per_beat")
+
+				chEq(msg.numerator, 4, "time_sig numerator")
+				chEq(msg.denominator, 4, "time_sig denominator")
 
 				self.time_sig = [msg.numerator, msg.denominator]
 
@@ -257,8 +285,42 @@ class Song():
 		mid.save(file_name)
 
 	def __str__(self):
-		pass
+		raise NotImplementedException()
+
+	def toSixteenthArray(self):
+		arr = SixteenthArray()
+		arr.loadFromSong(self)
+		return arr
+
+	def loadFromSixteenthArray(self, sixteenth_arr):
+		self.bpm = sixteenth_arr.bpm
+        self.time_sig = list(sixteenth_arr.time_sig)
+        self.key_sig = sixteenth_arr.key_sig
+        self.instrument = 1 # always piano
+        self.ppqn = 480
+        
+        self.melody, self.melody_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr)
+        self.chords, self.chord_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.chords_arr)
+        
+        self.bar_len = self.ppqn * sixteenth_arr.BAR_LEN
+        self.pulse_len = sixteenth_arr.n_bars * self.bar_len
+        
+
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def _tests():
 	midi_path = '/home/henri/Documents/Git/MusicGenerationWithML/data/midi/my_data/6Teen_Theme.mid'

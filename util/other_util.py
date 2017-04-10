@@ -57,3 +57,17 @@ def sortUsingIndex(arr, index=0):
 
 def intRoundUp(n, mod):
 	return ((n + mod - 1) / mod) * mod
+
+# Purpose: find index of the next value in the array that is different from l[i]
+def nextDifferent(l, i):
+	l_len = len(l)
+	val = l[i]
+
+	i += 1
+	if i >= l_len:
+		return i
+
+	while i < l_len and l[i] == val:
+		i += 1
+
+	return i
