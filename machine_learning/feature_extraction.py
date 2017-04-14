@@ -80,4 +80,5 @@ proportion of notes starting on the quarter note or eight note
 Median of interval sizes
 321, 31, 43, 65, proportion of 7, 1, 3, 4
 proportion of beats on beat vs eighth vs sixteenth
+rest in the beginning
 '''

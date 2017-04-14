@@ -19,11 +19,17 @@ NOTE_TO_LH_ROOT = {
 	'A#': 46, 
 	'B': 47
 }
-SUPPORTED_QUALITIES = {
+SUPPORTED_CHORD_QUALITIES = {
 	'+': np.array([0, 4, 7]),
 	'-': np.array([0, 3, 7])
 	# aug, dim, dom7, dim7
 }
+SUPPORTED_KEY_QUALITIES = {
+	'+': np.array([0, 2, 4, 5, 7, 9, 11]),
+	'-': np.array([0, 2, 3, 5, 7, 8, 10]),
+	'har-': np.array([0, 2, 3, 5, 7, 8, 11])
+}
+
 
 def noteToLhRoot(midi_note):
 	return NOTE_TO_LH_ROOT[midi_note]
@@ -42,7 +48,7 @@ class Harmony():
 		else:
 			self.root = root
 			self.quality = quality
-			if quality not in SUPPORTED_QUALITIES.keys():
+			if quality not in SUPPORTED_CHORD_QUALITIES.keys():
 				raise NotImplementedError()
 
 	# note list uses the MIDI numbers
@@ -55,8 +61,8 @@ class Harmony():
 
 		note_list_diff = np.diff(note_list) # 5
 
-		for k in SUPPORTED_QUALITIES.keys():
-			quality_diff = np.diff(SUPPORTED_QUALITIES[k])
+		for k in SUPPORTED_CHORD_QUALITIES.keys():
+			quality_diff = np.diff(SUPPORTED_CHORD_QUALITIES[k])
 
 			if len(quality_diff) != n_notes - 1:
 				# if the number of notes don't match for the quality 
@@ -75,7 +81,7 @@ class Harmony():
 
 	def getLhChord(self):
 		root_midi_num = NOTE_TO_LH_ROOT[self.root]
-		return root_midi_num + SUPPORTED_QUALITIES[self.quality]
+		return root_midi_num + SUPPORTED_CHORD_QUALITIES[self.quality]
 
 	def fitChord(self, midi_note):
 		return (midi_note) % 12 in (self.getLhChord() % 12)

@@ -294,17 +294,17 @@ class Song():
 
 	def loadFromSixteenthArray(self, sixteenth_arr):
 		self.bpm = sixteenth_arr.bpm
-        self.time_sig = list(sixteenth_arr.time_sig)
-        self.key_sig = sixteenth_arr.key_sig
-        self.instrument = 1 # always piano
-        self.ppqn = 480
-        
-        self.melody, self.melody_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr)
-        self.chords, self.chord_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.chords_arr)
-        
-        self.bar_len = self.ppqn * sixteenth_arr.BAR_LEN
-        self.pulse_len = sixteenth_arr.n_bars * self.bar_len
-        
+		self.time_sig = list(sixteenth_arr.time_sig)
+		self.key_sig = sixteenth_arr.key_sig
+		self.instrument = 1 # always piano
+		self.ppqn = 480
+		
+		self.melody, self.melody_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr)
+		self.chords, self.chord_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.chords_arr)
+		
+		self.bar_len = self.ppqn * sixteenth_arr.BAR_LEN
+		self.pulse_len = sixteenth_arr.n_bars * self.bar_len
+	    
 
 	
 
