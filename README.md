@@ -13,7 +13,8 @@ To Do
 - [ ] generate random songs as bad songs for the music rating predictor
 - [ ] implement features for a music rating predictor
 - [ ] train the music rating model
-- [ ] gather the RL code
+- [ ] gather RL code
+- [ ] write the environment class for the RL agent
 - [ ] try formulation 1
 - [ ] try formulation 2
 
@@ -23,3 +24,7 @@ Possible Reinforcement Learning Formulations:
 2. same as previous example, but 1 new action is added to be able to sustain the previous note.
 3. 2 separate agents to handle rhythm and melody generation (inspired by Maluuba's paper on separation of concerns)
 4. 1 agent which decides the next note and duration in the moment
+
+Next Steps:
+1. have an agent which manages repitition of melodies
+2. have an agent which manages harmony structure

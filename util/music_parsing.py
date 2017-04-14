@@ -2,6 +2,7 @@ from mido import MidiFile, MidiTrack, Message, MetaMessage
 import os
 from other_util import *
 from music_theory import Harmony
+from sixteenth_array import *
 
 def checkTimeSig(time_sig):
 	if time_sig != [4, 4]:
@@ -307,15 +308,16 @@ class Song():
 	    
 
 	
+def splitMidi(input_file_path, output_file_prefix):
+    full = Song()
+    full.loadFromMidi(input_file_path)
 
+    sixteenth_arr = full.toSixteenthArray()
 
-
-
-
-
-
-
-
+    for i, section_arr in enumerate(sixteenth_arr.splitByBarRest()):
+        section = Song()
+        section.loadFromSixteenthArray(section_arr)
+        section.toMidi(output_file_prefix + str(i) + ".mid")
 
 
 
