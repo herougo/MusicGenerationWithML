@@ -73,6 +73,13 @@ def nextDifferent(l, i):
 
 	return i
 
+def randomPartition(n, r):
+	partition = [0] * r
+	for i in range(n):
+		partition[np.random.randint(r + 1)] += 1
+	
+	return partition
+
 # Purpose: choose a random combination of r items from 0, ... n-1
 # Note: this is not uniformly random
 def randomCombination(n, r):
@@ -80,7 +87,7 @@ def randomCombination(n, r):
 	# divide [0, n-1] into r+1 sections
 	partition = [0] + [1] * (r-1) + [0]
 	for i in range(n-r):
-		partition[random.randint(0, r)] += 1
+		partition[np.random.randint(r + 1)] += 1
 	
 	return np.cumsum(partition[:r])
 
@@ -108,4 +115,20 @@ def boolArrayToRanges(arr):
 def getSatisfyingRanges(fn, l):
     arr = map(fn, l)
     return boolArrayToRanges(arr)
+
+def randomSignSwitch(l):
+	result = list(l)
+	for i in range(len(result)):
+		if np.random.randint(2) == 0:
+			result[i] *= -1
+	return result
+
+def accSumOptima(l)
+	acc_sum_min = l[0]
+	acc_sum_max = l[0]
+	for i in range(1, len(l)):
+		acc_sum_min = min(acc_sum_min, l[i])
+		acc_sum_max = max(acc_sum_max, l[i])
+	return acc_sum_min, acc_sum_max
+
     

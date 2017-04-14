@@ -1,16 +1,17 @@
 from music_parsing import Song
 import numpy as np
+from other_util import *
 
 PLACEHOLDER = -3
 REST = -2
 SUSTAIN = -1
-SIXTEENTH_BAR_LEN = 4 * 16
+SIXTEENTH_BAR_LEN = 4 * 4
 
 def pulseToSixteenth(n_pulses, ppqn):
-    return int((n_pulses * 16) / ppqn)
+    return int((n_pulses * 4) / ppqn)
 
 def sixteenthToPulse(n_sixteenths, ppqn):
-    return int((n_sixteenths * ppqn) / 16)
+    return int((n_sixteenths * ppqn) / 4)
 
 def sixteenthToTimeIntervalFormat(arr, ppqn):
     arr_len = len(arr)
@@ -89,7 +90,7 @@ class SixteenthArray:
         return song
         
 
-    def loadFromArguments(self, melody_arr, chords_arr, key_sig, bpm = 120, time_sig = [4, 4]):
+    def loadFromArguments(self, melody_arr, chords_arr, key_sig="C", bpm = 120, time_sig = [4, 4]):
         chEq(len(melody_arr), len(chords_arr), "loadFromArguments equal array sizes")
         self.melody_arr = melody_arr
         self.chords_arr = chords_arr
@@ -145,4 +146,26 @@ class SixteenthArray:
         chords = map(lambda r: self.chords_arr[r[0]], chord_ranges)
         section_lengths = map(lambda r: r[1] - r[0], chord_ranges)
         return zip(melodies, chords, section_lengths)
+
+# Purpose: find index which is not REST
+def getMusicStart(arr):
+    for i in range(len(arr)):
+        if arr[i] != REST:
+            return i
+    return -1
+
+# Purpose: Find first non-REST value and fill R later REST values as SUSTAIN
+def fillSustain(arr):
+    arr = list(arr)
+    music_start = getMusicStart(arr)
+
+    if music_start != -1:
+        for i in range(music_start, len(arr)):
+            if arr[i] == REST:
+                arr[i] = SUSTAIN
+
+    return arr
+
+
+
 
