@@ -8,12 +8,18 @@ To Do
 - [x] Understand the MIDI file format
 - [x] Write a MIDI parser
 - [x] debug the MIDI parser
+- [x] write the music theory code
 - [ ] organize the data set
-- [ ] implement features for a music rating predictor and train the model
-- [ ] implement an RL model for choosing a rhythm and train the model
-- [ ] implement an RL model for choosing a melody given a rhythm and train the model
+- [ ] generate random songs as bad songs for the music rating predictor
+- [ ] implement features for a music rating predictor
+- [ ] train the music rating model
+- [ ] gather the RL code
+- [ ] try formulation 1
+- [ ] try formulation 2
 
 
-Alternative Reinforcement Learning Formulations:
-- 2 separate agents to handle rhythm and melody generation (inspired by Maluuba's paper on separation of concerns)
-- 1 agent which decides the next note and duration in the moment
+Possible Reinforcement Learning Formulations:
+1. 1 bar of music with 8 eighth notes (agent determines the notes)
+2. same as previous example, but 1 new action is added to be able to sustain the previous note.
+3. 2 separate agents to handle rhythm and melody generation (inspired by Maluuba's paper on separation of concerns)
+4. 1 agent which decides the next note and duration in the moment
