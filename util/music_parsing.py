@@ -96,8 +96,8 @@ class NoteSequence():
 		#	time_intervals[counter][0] = intRoundUp(time_intervals[counter][0], ppqn)
 
 		# make the end times of chord the start time of the next chord
-		for i in range(len(note_lists) - 1):
-			time_intervals[i][1] = time_intervals[i+1][0]
+		#for i in range(len(note_lists) - 1):
+		#	time_intervals[i][1] = time_intervals[i+1][0]
 
 		chords = map(lambda x: Harmony(note_list=x), note_lists)
 
