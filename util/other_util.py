@@ -76,7 +76,7 @@ def nextDifferent(l, i):
 def randomPartition(n, r):
 	partition = [0] * r
 	for i in range(n):
-		partition[np.random.randint(r + 1)] += 1
+		partition[np.random.randint(r)] += 1
 	
 	return partition
 
@@ -94,27 +94,27 @@ def randomCombination(n, r):
 # Purpose: takes a boolean (or binary) array as input and returns the 
 # maximal ranges in [a, b) form where the elements are True (or 1)
 def boolArrayToRanges(arr):
-    building_range = False
-    start = 0
-    result = []
-    for i in range(len(arr)):
-        if (not arr[i]) and building_range:
-            result.append([start, i])
-            building_range = False
-        elif arr[i] and (not building_range):
-            building_range = True
-            start = i
-    
-    if building_range:
-        result.append([start, len(arr)])
-    
-    return result
+	building_range = False
+	start = 0
+	result = []
+	for i in range(len(arr)):
+		if (not arr[i]) and building_range:
+			result.append([start, i])
+			building_range = False
+		elif arr[i] and (not building_range):
+			building_range = True
+			start = i
+	
+	if building_range:
+		result.append([start, len(arr)])
+	
+	return result
 
 # Purpose: get the maximal ranges (similar to boolArrayToRanges) st the 
 # element-wise function ("fn") value is true
 def getSatisfyingRanges(fn, l):
-    arr = map(fn, l)
-    return boolArrayToRanges(arr)
+	arr = map(fn, l)
+	return boolArrayToRanges(arr)
 
 def randomSignSwitch(l):
 	result = list(l)
@@ -123,12 +123,6 @@ def randomSignSwitch(l):
 			result[i] *= -1
 	return result
 
-def accSumOptima(l)
-	acc_sum_min = l[0]
-	acc_sum_max = l[0]
-	for i in range(1, len(l)):
-		acc_sum_min = min(acc_sum_min, l[i])
-		acc_sum_max = max(acc_sum_max, l[i])
-	return acc_sum_min, acc_sum_max
 
-    
+
+	
