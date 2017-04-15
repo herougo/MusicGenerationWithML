@@ -155,13 +155,13 @@ class Song():
 		note_starts = {}
 
 		for msg in track:
+			acc_time += msg.time
 			if msg.type == 'note_off' or (msg.type == 'note_on' and msg.velocity==0):
 				# (note_off is equivalent to note_on with 0 velocity)
 				# (note that midi files can play notes then leave a brief rest before the next note
 				#  which isn't explicitly marked as a rest)
 				#print msg.velocity, msg.note, msg.time
 
-				acc_time += msg.time
 				chIn(msg.note, note_starts.keys(), "note_off")
 
 				seq.addNote(msg.note, note_starts[msg.note], acc_time)
@@ -178,7 +178,6 @@ class Song():
 				#       eg. time=0 means you play it immediately as you get the message
 				#       the units are ticks
 
-				acc_time += msg.time
 				chNotIn(msg.note, note_starts.keys(), "note_on")
 				note_starts[msg.note] = acc_time
 
