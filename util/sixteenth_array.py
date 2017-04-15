@@ -143,6 +143,16 @@ class SixteenthArray:
     def iterByChord(self):
         chord_ranges = getSatisfyingRanges(self._isPartOfChord, self.chords_arr)
         melodies = map(lambda r: self.melody_arr[r], chord_ranges)
+
+        # account for notes starting before the ranges
+        for i in :range(len(chord_ranges)):
+            r = chord_ranges[i]
+            if melodies[r[0]] == SUSTAIN:
+                for j in reversed(range(0, r[0])):
+                    if melodies[j] != SUSTAIN:
+                        melodies[r[0]] = melodies[j]
+                        break
+
         chords = map(lambda r: self.chords_arr[r[0]], chord_ranges)
         section_lengths = map(lambda r: r[1] - r[0], chord_ranges)
         return zip(melodies, chords, section_lengths)
