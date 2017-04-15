@@ -39,6 +39,10 @@ def sixteenthToTimeIntervalFormat(arr, ppqn):
             prev_val = current
             prev_start = sixteenthToPulse(i, ppqn)
         i = nextDifferent(arr, i)
+
+    if prev_val != None:
+        values.append(prev_val)
+        time_intervals.append([prev_start, sixteenthToPulse(i, ppqn)])
         
     return values, time_intervals
 
@@ -59,11 +63,11 @@ class SixteenthArray:
         self.bpm = song.bpm
         self.time_sig = list(song.time_sig)
         self.key_sig = song.key_sig
-        self.n_bars = song.pulse_len / SIXTEENTH_BAR_LEN
+        self.n_bars = pulseToSixteenth(song.pulse_len, song.ppqn) / SIXTEENTH_BAR_LEN
         
         # melody
         melody = [REST] * SIXTEENTH_BAR_LEN * self.n_bars
-        for note, ti in zip(song.melody, song.melody_intervals):
+        for note, ti in zip(song.melody, song.melody_time_intervals):
             start = pulseToSixteenth(ti[0], song.ppqn)
             end = pulseToSixteenth(ti[1], song.ppqn)
             
@@ -97,6 +101,7 @@ class SixteenthArray:
         self.bpm = bpm
         self.time_sig = time_sig
         self.key_sig = key_sig
+        self.n_bars = (len(self.melody_arr) + SIXTEENTH_BAR_LEN - 1) / SIXTEENTH_BAR_LEN
     
     # output: array of SixteenthArrays corresponding to splitting the SixteenthArray
     # by full bars of rest in the melody
@@ -110,7 +115,7 @@ class SixteenthArray:
 
         while True:
             # ignore rest
-            while end <= melody_arr_len and np.all(melody_arr[start:end] == -2):
+            while end <= melody_arr_len and np.all(np.array(melody_arr[start:end]) == REST):
                 start += SIXTEENTH_BAR_LEN
                 end += SIXTEENTH_BAR_LEN
             
@@ -119,9 +124,11 @@ class SixteenthArray:
 
             # find maximal streak of consecutive non-empty bars
             while (end <= melody_arr_len 
-                   and (not np.all(melody_arr[end - SIXTEENTH_BAR_LEN:end] == -2))):
+                   and np.any(np.array(melody_arr[end - SIXTEENTH_BAR_LEN:end]) != REST)):
                 end += SIXTEENTH_BAR_LEN
             end -= SIXTEENTH_BAR_LEN
+        
+            chGt(end, start, "splitByBarRest")
 
             new_sixteenth_arr = SixteenthArray()
             new_sixteenth_arr.loadFromArguments(
@@ -145,7 +152,7 @@ class SixteenthArray:
         melodies = map(lambda r: self.melody_arr[r], chord_ranges)
 
         # account for notes starting before the ranges
-        for i in :range(len(chord_ranges)):
+        for i in range(len(chord_ranges)):
             r = chord_ranges[i]
             if melodies[r[0]] == SUSTAIN:
                 for j in reversed(range(0, r[0])):

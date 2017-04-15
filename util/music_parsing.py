@@ -2,7 +2,7 @@ from mido import MidiFile, MidiTrack, Message, MetaMessage
 import os
 from other_util import *
 from music_theory import Harmony
-from sixteenth_array import *
+import sixteenth_array as sa
 
 def checkTimeSig(time_sig):
 	if time_sig != [4, 4]:
@@ -288,8 +288,23 @@ class Song():
 	def __str__(self):
 		raise NotImplementedException()
 
+	def printMe(self):
+		print "bpm:", self.bpm
+		print "time_sig:", self.time_sig
+		print "key_sig:", self.key_sig
+		print "instrument:", self.instrument
+		print "ppqn:", self.ppqn
+
+		print "pulse_len:", self.pulse_len
+		print "bar_len:", self.bar_len
+
+		print "melody:", self.melody
+		print "melody_time_intervals:", self.melody_time_intervals
+		print "chords:", self.chords
+		print "chord_time_intervals:", self.chord_time_intervals
+
 	def toSixteenthArray(self):
-		arr = SixteenthArray()
+		arr = sa.SixteenthArray()
 		arr.loadFromSong(self)
 		return arr
 
@@ -300,10 +315,10 @@ class Song():
 		self.instrument = 1 # always piano
 		self.ppqn = 480
 		
-		self.melody, self.melody_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr)
-		self.chords, self.chord_time_intervals = sixteenthToTimeIntervalFormat(sixteenth_arr.chords_arr)
+		self.melody, self.melody_time_intervals = sa.sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr, self.ppqn)
+		self.chords, self.chord_time_intervals = sa.sixteenthToTimeIntervalFormat(sixteenth_arr.chords_arr, self.ppqn)
 		
-		self.bar_len = self.ppqn * sixteenth_arr.BAR_LEN
+		self.bar_len = sa.sixteenthToPulse(sa.SIXTEENTH_BAR_LEN, self.ppqn)
 		self.pulse_len = sixteenth_arr.n_bars * self.bar_len
 	    
 

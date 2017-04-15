@@ -71,8 +71,6 @@ def randomlyGenerateBar2():
         
     melody_arr = fillSustain(melody_arr)
     
-    return melody_arr
-    
     harmony_arr = [SUSTAIN] * SIXTEENTH_BAR_LEN
     harmony_arr[0] = Harmony('C', '+')
     
