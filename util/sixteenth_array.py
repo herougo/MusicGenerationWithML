@@ -150,12 +150,20 @@ class SixteenthArray:
     def iterByChord(self):
         chord_ranges = getSatisfyingRanges(self._isPartOfChord, self.chords_arr)
         melodies = map(lambda r: self.melody_arr[r], chord_ranges)
+        chord_len = len(chord_ranges)
 
         # account for notes starting before the ranges
-        for i in range(len(chord_ranges)):
+        for i in range(chord_len):
             r = chord_ranges[i]
             if melodies[r[0]] == SUSTAIN:
+            	# extend first note left
                 for j in reversed(range(0, r[0])):
+                    if melodies[j] != SUSTAIN:
+                        melodies[r[0]] = melodies[j]
+                        break
+            if r[1] < chord_len
+                # extend last note right **************
+                for j in range(r[1], chord_len):
                     if melodies[j] != SUSTAIN:
                         melodies[r[0]] = melodies[j]
                         break

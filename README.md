@@ -9,8 +9,8 @@ To Do
 - [x] Write a MIDI parser
 - [x] debug the MIDI parser
 - [x] write the music theory code
-- [ ] organize the data set
-- [ ] generate random songs as bad songs for the music rating predictor
+- [x] organize the data set
+- [x] generate random songs as bad songs for the music rating predictor
 - [ ] implement features for a music rating predictor
 - [ ] train the music rating model
 - [ ] gather RL code
