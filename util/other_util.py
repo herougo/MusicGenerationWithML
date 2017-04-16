@@ -129,6 +129,31 @@ def randomSignSwitch(l):
 			result[i] *= -1
 	return result
 
-
-
+# Purpose: this counts the number of times the numbers in a sequence change direction
+# eg. [1, 2, 3, 1, 3] changes 2 times because of (3, 1) and (1, 3)
+def numDirectionChanges(l):
+	len_l = len(l)
+	if len_l < 2:
+		return 0
+	direction_count = 0
+	new_direction_index = 1
+	while new_direction_index <= len_l and l[new_direction_index] == l[0]:
+		new_direction_index += 1
 	
+	prev_dir = l[new_direction_index] - l[0]
+	for i in range(2, len_l):
+		curr_dir = l[i] - l[i-1]
+		if curr_dir * prev_dir < 0:
+			prev_dir = curr_dir
+			direction_count += 1
+	
+	return direction_count
+
+def listToOccDict(l):
+	result = {}
+	for val in l:
+		if val in result.keys():
+			result[val] += 1
+		else:
+			result[val] = 1
+	return result
