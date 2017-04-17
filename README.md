@@ -11,9 +11,10 @@ To Do
 - [x] write the music theory code
 - [x] organize the data set
 - [x] generate random songs as bad songs for the music rating predictor
-- [ ] implement features for a music rating predictor
+- [x] implement features for a music rating predictor
+- [ ] create the data for the music rating model
 - [ ] train the music rating model
-- [ ] gather RL code
+- [x] gather RL code
 - [ ] write the environment class for the RL agent
 - [ ] try formulation 1
 - [ ] try formulation 2
