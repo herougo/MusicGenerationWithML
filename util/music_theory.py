@@ -86,6 +86,10 @@ class Harmony():
 	def fitChord(self, midi_note):
 		return (midi_note) % 12 in (self.getLhChord() % 12)
 
+	def isTonic(self, midi_note):
+		root_midi_num = NOTE_TO_LH_ROOT[self.root]
+		return (root_midi_num % 12) == (midi_note % 12)
+
 		
 
 def _tests():

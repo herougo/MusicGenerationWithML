@@ -22,7 +22,6 @@ RL_CHORD = Harmony()
 # - measure distance using the semitone interpretation
 # - step is defined as a distance less than 3 semitones
 def extractFeatures(sixteenth_arr):
-    # assume we have *********************
     filtered_note_arr, filtered_note_durations = sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr, 4)
     filtered_note_durations = map(lambda r: r[1] - r[0], filtered_note_durations)
     filtered_note_indices = nonnegativeIndices(sixteenth_arr.melody_arr)
@@ -65,31 +64,83 @@ def extractFeatures(sixteenth_arr):
     features["n_bars"] = sixteenth_arr.n_bars
 
 
-    ***features["tonic_as_final_note"] = (1 if filtered_note_arr[-1] == 1 else 0)
+    #features["tonic_as_final_note"] = (1 if filtered_note_arr[-1] == 1 else 0)
 
     # Chord Features
     chord_iteration = sixteenth_arr.iterByChord()
+    # per note
     features["ratio_notes_fitting_chord"] = 0.0
     features["ratio_non_ct_step_from_ct"] = 0.0
     features["ratio_non_ct_step_to_ct"] = 0.0
+
+    # per chord
     features["ratio_tonic_of_chord_reached"] = 0.0
-    features["ratio_ct_reached"] = 0.0
     features["ratio_longest_note_in_chord"] = 0.0
+    features["ratio_ct_reached"] = 0.0
 
+    # per chord duration
     features["ratio_notes_fitting_chord_w_duration"] = 0.0
-    features["last_note_in_chord"] = 0
 
-    prev_note = -100
+    # *** technically not correct
+    last_note = filtered_note_arr[-1]
+    last_chord = chord_iteration[2][-1]
+    features["last_note_in_chord"] = last_chord.fitChord(last_note)
+
+    n_notes_in_chord = 0
+    n_chords = len(chord_iteration)
+    ct_duration_sum = 0
+    chord_duration_sum = 0
     for notes, note_intervals, chord, chord_interval in chord_iteration:
         longest_note_index = np.argmax(map(lambda x: x[1] - x[0], note_intervals))
         features["ratio_longest_note_in_chord"] += chord.fitChord(notes[longest_note_index])
 
         n_chord_tones = 0
+        tonic_reached = False
+        prev_note = -100
+        prev_note_ct = False
 
         for note, note_interval in zip(notes, note_intervals):
+            note_ct = chord.fitChord(note)
+
+            if note_ct:
+                n_chord_tones += 1
+                ct_duration_sum += note_interval[1] - note_interval[0]
+
+            if np.abs(note - prev_note) < LEAP_MIN_DIFF:
+                # (note != prev_note is implied by the following if checks)
+                if prev_note_ct and (not note_ct):
+                    features["ratio_non_ct_step_from_ct"] += 1
+                else note_ct and (not prev_note_ct):
+                    features["ratio_non_ct_step_to_ct"] += 1
 
 
+            if chord.isTonic(note):
+                tonic_reached = True
+            
+            n_notes_in_chord += 1
+            prev_note = note
+            prev_note_ct = note_ct
 
+        chord_duration_sum += chord_interval[1] - chord_interval[0]
+
+        features["ratio_ct_reached"] += (n_chord_tones > 0)
+        features["ratio_tonic_of_chord_reached"] = 0.0
+        features["ratio_notes_fitting_chord"] += n_chord_tones
+
+    # Denominator for ratios
+    # per note
+    features["ratio_notes_fitting_chord"] /= n_notes_in_chord
+    features["ratio_non_ct_step_from_ct"] /= n_notes_in_chord
+    features["ratio_non_ct_step_to_ct"] /= n_notes_in_chord
+
+    # per chord
+    features["ratio_tonic_of_chord_reached"] /= n_chords
+    features["ratio_longest_note_in_chord"] /= n_chords
+    features["ratio_ct_reached"] /= n_chords
+
+    # per chord duration
+    features["ratio_notes_fitting_chord_w_duration"] = ct_duration_sum / chord_duration_sum
+    
 
     return features
 
@@ -111,17 +162,6 @@ MINOR_KEY_NOTE_SEQUENCES = [
 
 
 ''' Planned Features
-Chord Features
-- number of notes fitting chord
-- proportion of chord-fitting notes
-- last note in key
-- long notes in key
-  - ratio to chords
-- long note tonic (or 3rd) of key
-- percentage of non-chord tones that resolve stepwise to inside the chord
-- percentage of non-chord notes which came stepwise from a chord tone
-- is tonic (or 3rd or 5th) of current chord reached
-  - ratio to chords
 
 Note Sequences
 - uses minor 3-2-1
@@ -160,6 +200,17 @@ Rhythm Features
 - proportion of beats on beat vs eighth vs sixteenth
 
 
+Chord Features
+- number of notes fitting chord
+- proportion of chord-fitting notes
+- last note in key
+- long notes in key
+  - ratio to chords
+- long note tonic (or 3rd) of key
+- percentage of non-chord tones that resolve stepwise to inside the chord
+- percentage of non-chord notes which came stepwise from a chord tone
+- is tonic (or 3rd or 5th) of current chord reached
+  - ratio to chords
 '''
 
 # ###################################
