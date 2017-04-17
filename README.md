@@ -22,8 +22,9 @@ To Do
 Possible Reinforcement Learning Formulations:
 1. 1 bar of music with 8 eighth notes (agent determines the notes)
 2. same as previous example, but 1 new action is added to be able to sustain the previous note.
-3. 2 separate agents to handle rhythm and melody generation (inspired by Maluuba's paper on separation of concerns)
-4. 1 agent which decides the next note and duration in the moment
+3. generate a 4 bar phrase using a I IV V I chord progression
+4. 2 separate agents to handle rhythm and melody generation (inspired by Maluuba's paper on separation of concerns)
+5. 1 agent which decides the next note and duration in the moment
 
 Next Steps:
 1. have an agent which manages repitition of melodies

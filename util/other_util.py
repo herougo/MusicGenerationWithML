@@ -43,8 +43,8 @@ def nonnegativeIndices(arr):
 def skewness(arr):
 	arr_mean = np.mean(arr)
 	arr_len = len(arr)
-	numerator = np.power(arr - arr_mean, 3) / arr_len
-	denominator = np.power(arr - arr_mean, 2) / arr_len
+	numerator = np.sum(np.power(arr - arr_mean, 3)) / arr_len
+	denominator = np.sum(np.power(arr - arr_mean, 2)) / arr_len
 	denominator = np.power(np.sqrt(denominator), 3)
 	return numerator / denominator
 

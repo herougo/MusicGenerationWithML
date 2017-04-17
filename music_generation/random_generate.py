@@ -4,29 +4,14 @@ import numpy as np
 from util.sixteenth_array import *
 from util.other_util import *
 from util.music_theory import *
-
-
-# 55 is G before C4
-
-# Generate C Major
-
-POSSIBLE_NOTES = range(5, 20)
-# 5 - > 55
-# 12 -> 67
-# 29 -> 79
-
-
-def _toMidiNoteHelper(yo):
-    offset = 12 * ((yo - 1) / 7) + 48
-    mod = (yo + 6) % 7
-    return offset + SUPPORTED_KEY_QUALITIES['+'][mod]
+from c_major_gen_util import *
 
 
 def randomlyGenerateBar1():
     melody_arr = [REST] * SIXTEENTH_BAR_LEN
     for i in range(8):
         random_note = np.random.randint(5, 20)
-        melody_arr[2*i] = _toMidiNoteHelper(random_note)
+        melody_arr[2*i] = scaleDegreeToCMajorMidiNum(random_note)
     
     
     melody_arr = fillSustain(melody_arr)
@@ -67,7 +52,7 @@ def randomlyGenerateBar2():
     melody_arr = [REST] * SIXTEENTH_BAR_LEN
     for i in range(n_notes):
         note_index = 2 * eighth_note_indices[i]
-        melody_arr[note_index] = _toMidiNoteHelper(eighth_notes[i])
+        melody_arr[note_index] = scaleDegreeToCMajorMidiNum(eighth_notes[i])
         
     melody_arr = fillSustain(melody_arr)
     

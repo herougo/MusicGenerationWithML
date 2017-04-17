@@ -148,29 +148,43 @@ class SixteenthArray:
             return True
     
     def iterByChord(self):
-        chord_ranges = getSatisfyingRanges(self._isPartOfChord, self.chords_arr)
-        melodies = map(lambda r: self.melody_arr[r], chord_ranges)
-        chord_len = len(chord_ranges)
-
-        # account for notes starting before the ranges
-        for i in range(chord_len):
-            r = chord_ranges[i]
-            if melodies[r[0]] == SUSTAIN:
-            	# extend first note left
-                for j in reversed(range(0, r[0])):
-                    if melodies[j] != SUSTAIN:
-                        melodies[r[0]] = melodies[j]
-                        break
-            if r[1] < chord_len
-                # extend last note right **************
-                for j in range(r[1], chord_len):
-                    if melodies[j] != SUSTAIN:
-                        melodies[r[0]] = melodies[j]
-                        break
-
-        chords = map(lambda r: self.chords_arr[r[0]], chord_ranges)
-        section_lengths = map(lambda r: r[1] - r[0], chord_ranges)
-        return zip(melodies, chords, section_lengths)
+        melody, melody_intervals = sixteenthToTimeIntervalFormat(self.melody_arr, 4)
+        chords, chord_intervals = sixteenthToTimeIntervalFormat(self.chords_arr, 4)
+        
+        #melody, melody_intervals = [1, 2, 3, 4], [[1, 3], [3, 5], [5, 6], [6, 8]]
+        #chords, chord_intervals = [1, 2, 3, 4], [[2, 4], [4, 6], [6, 8], [8, 10]]
+        
+        melody_len = len(melody)
+        chord_len = len(chords)
+        
+        chord_melodies = []
+        chord_melody_intervals = []
+        melody_ptr = 0
+        
+        i = 0
+        while i < chord_len:
+            chord_start = chord_intervals[i][0]
+            chord_end = chord_intervals[i][1]
+            
+            # go to next note played during the chord
+            while melody_ptr < melody_len and melody_intervals[melody_ptr][1] <= chord_start:
+                melody_ptr += 1
+                
+            # while current note is in the chord time frame
+            chord_notes = []
+            chord_note_intervals = []
+            while melody_ptr < melody_len and melody_intervals[melody_ptr][0] < chord_end:
+                chord_notes.append(melody[melody_ptr])
+                chord_note_intervals.append(list(melody_intervals[melody_ptr]))            
+                melody_ptr += 1
+            melody_ptr -= 1
+            
+            chord_melodies.append(chord_notes)
+            chord_melody_intervals.append(chord_note_intervals)
+            
+            i += 1
+        
+        return chord_melodies, chord_melody_intervals, chords, chord_intervals
 
 # Purpose: find index which is not REST
 def getMusicStart(arr):

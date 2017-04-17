@@ -18,6 +18,9 @@ self.melody_arr = []
 
 RL_CHORD = Harmony()
 
+# Assumptions:
+# - measure distance using the semitone interpretation
+# - step is defined as a distance less than 3 semitones
 def extractFeatures(sixteenth_arr):
     # assume we have *********************
     filtered_note_arr, filtered_note_durations = sixteenthToTimeIntervalFormat(sixteenth_arr.melody_arr, 4)
@@ -45,18 +48,51 @@ def extractFeatures(sixteenth_arr):
     else:
         features["leap_proportion"] = 0
     features["n_distinct_pitches"] = len(set(filtered_note_arr))
-    
-    ***features["tonic_as_final_note"] = 1 if filtered_note_arr[-1] == 1 else 0
+
+    features["interval_skewness"] = skewness(filtered_note_abs_diff)
+    features["is_major"] = 1 if 'm' in sixteenth_arr.key_sig else 0
+    features["n_notes"] = len(filtered_note_arr)
     
     # Scale Dependent
     features["max_note_break"] = max(np.abs(np.diff(filtered_note_indices)))
-    features["start_rest_len"] = filtered_note_indices[0]
+    features["start_rest_len"] = float(filtered_note_indices[0]) / 4
     features["pickup_beat_len"] = float((SIXTEENTH_BAR_LEN - filtered_note_indices[0]) % SIXTEENTH_BAR_LEN) / 4
     if filtered_note_len > 1:
         interval_duration_ratios = map(lambda r: r[1] / r[0], zip(filtered_note_abs_diff, filtered_note_durations))
         features["max_interval_duration_ratio"] = max(interval_duration_ratios)
     else:
         features["max_interval_duration_ratio"] = 0
+    features["n_bars"] = sixteenth_arr.n_bars
+
+
+    ***features["tonic_as_final_note"] = (1 if filtered_note_arr[-1] == 1 else 0)
+
+    # Chord Features
+    chord_iteration = sixteenth_arr.iterByChord()
+    features["ratio_notes_fitting_chord"] = 0.0
+    features["ratio_non_ct_step_from_ct"] = 0.0
+    features["ratio_non_ct_step_to_ct"] = 0.0
+    features["ratio_tonic_of_chord_reached"] = 0.0
+    features["ratio_ct_reached"] = 0.0
+    features["ratio_longest_note_in_chord"] = 0.0
+
+    features["ratio_notes_fitting_chord_w_duration"] = 0.0
+    features["last_note_in_chord"] = 0
+
+    prev_note = -100
+    for notes, note_intervals, chord, chord_interval in chord_iteration:
+        longest_note_index = np.argmax(map(lambda x: x[1] - x[0], note_intervals))
+        features["ratio_longest_note_in_chord"] += chord.fitChord(notes[longest_note_index])
+
+        n_chord_tones = 0
+
+        for note, note_interval in zip(notes, note_intervals):
+
+
+
+
+    return features
+
 
 
 
@@ -64,7 +100,7 @@ def extractFeatures(sixteenth_arr):
 # Global Constants ##################
 # ###################################
 
-LEAP_MIN_DIFF = 2
+LEAP_MIN_DIFF = 3
 MINOR_KEY_NOTE_SEQUENCES = [
     [5, 6], [6, 5],
     [3, 1], [4, 3], [3, 4],
@@ -77,15 +113,15 @@ MINOR_KEY_NOTE_SEQUENCES = [
 ''' Planned Features
 Chord Features
 - number of notes fitting chord
-- number of non-chord tones
 - proportion of chord-fitting notes
 - last note in key
 - long notes in key
+  - ratio to chords
 - long note tonic (or 3rd) of key
 - percentage of non-chord tones that resolve stepwise to inside the chord
 - percentage of non-chord notes which came stepwise from a chord tone
 - is tonic (or 3rd or 5th) of current chord reached
-- Proportion in chord
+  - ratio to chords
 
 Note Sequences
 - uses minor 3-2-1
@@ -116,6 +152,8 @@ General
 - tonic_as_final_note
 - max_note_break
 - start_rest_len
+- skew of interval sizes
+- is_major
 
 Rhythm Features
 - max ratio of Interval between next note divided by current note duration
