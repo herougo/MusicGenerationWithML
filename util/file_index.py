@@ -3,7 +3,7 @@ import csv
 import numpy as np
 
 class FileIndex:
-    def __init__(self, input_dir='data/midi/', index_dir='data/', file_name='MUSICFILEINDEX.csv'):
+    def __init__(self, input_dir='data/', index_dir='data/', file_name='MUSICFILEINDEX.csv'):
         self.input_dir = input_dir
         self.index_path = os.path.join(index_dir, file_name)
         if not os.path.isfile(self.index_path):
@@ -23,8 +23,10 @@ class FileIndex:
         return np.array(result)
     
     def update(self):
+        print "Looking for updates in:", os.path.abspath(self.input_dir)
         all_files = self._getFilePathsRecursively(self.input_dir)
         matrix = self.getMatrix()
+        print matrix
         known_files = matrix[1:, 1:].flatten()
         missing_files = [f for f in all_files if f not in known_files]
         
@@ -37,7 +39,7 @@ class FileIndex:
             print "File", missing_file, "added"
             
             self._writeCsv(matrix)
-            print "File", self.index_path, "is done updating"
+        print "File", self.index_path, "is done updating"
         
         
     def _writeCsv(self, mat):

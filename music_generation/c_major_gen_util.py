@@ -16,14 +16,20 @@ def cMajorMidiNumToScaleDegree(midi_num):
     chGe(79, midi_num, "cMajorMidiNumToScaleDegree")
     
     octave = ((midi_num - 48) / 12) * 7
-    return MAJOR_MIDI_OFFSET_TO_DEGREE[midi_num % 12] + octave
+    result = MAJOR_MIDI_OFFSET_TO_DEGREE[midi_num % 12] + octave
+
+    return result
     
 
 def scaleDegreeToCMajorMidiNum(scale_degree):
+    chIn(scale_degree, POSSIBLE_NOTES)
     offset = 12 * ((scale_degree - 1) / 7) + 48
     mod = (scale_degree + 6) % 7
-    return offset + SUPPORTED_KEY_QUALITIES['+'][mod]
+    result = offset + SUPPORTED_KEY_QUALITIES['+'][mod]
+    chGe(result, 55)
+    chGe(79, result)
+    return result
 
 def _tests():
-	for i in range(5, 20):
+    for i in range(5, 20):
         chEq(cMajorMidiNumToScaleDegree(_toMidiNoteHelper(i)), i, "test1")

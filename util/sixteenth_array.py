@@ -38,7 +38,7 @@ def sixteenthToTimeIntervalFormat(arr, ppqn):
                 time_intervals.append([prev_start, sixteenthToPulse(i, ppqn)])
             prev_val = current
             prev_start = sixteenthToPulse(i, ppqn)
-        i = nextDifferent(arr, i)
+        i += 1
 
     if prev_val != None:
         values.append(prev_val)
@@ -185,6 +185,14 @@ class SixteenthArray:
             i += 1
         
         return chord_melodies, chord_melody_intervals, chords, chord_intervals
+
+    def printMe(self):
+        for melody, chord in zip(
+            np.array(self.melody_arr).reshape((-1, 16)),
+            np.array(self.chords_arr).reshape((-1, 16))):
+            print melody, len(melody)
+            print " ", chord, len(chord)
+            print ""
 
 # Purpose: find index which is not REST
 def getMusicStart(arr):

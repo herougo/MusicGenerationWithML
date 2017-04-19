@@ -95,9 +95,11 @@ class NoteSequence():
 		#for i in range(len(note_lists)):
 		#	time_intervals[counter][0] = intRoundUp(time_intervals[counter][0], ppqn)
 
-		# make the end times of chord the start time of the next chord
-		#for i in range(len(note_lists) - 1):
-		#	time_intervals[i][1] = time_intervals[i+1][0]
+		# line the end times of chords to the start time of the next chord
+		for i in range(len(note_lists) - 1):
+			time_intervals[i][1] = min(
+				time_intervals[i+1][0],
+				intRoundUp(time_intervals[i][1], self.epsilon))
 
 		chords = map(lambda x: Harmony(note_list=x), note_lists)
 
@@ -233,6 +235,7 @@ class Song():
 		melody_track.append(MetaMessage('set_tempo', tempo=midi_tempo))
 		melody_track.append(MetaMessage('time_signature', numerator=self.time_sig[0], 
 			denominator=self.time_sig[1], clocks_per_click=24, notated_32nd_notes_per_beat=8))
+		melody_track.append(MetaMessage('key_signature', key=self.key_sig))
 		mid.tracks.append(melody_track)
 
 		melody_track.append(Message('program_change', channel=1, program=1, time=0))
@@ -257,6 +260,7 @@ class Song():
 		harmony_track.append(MetaMessage('set_tempo', tempo=midi_tempo))
 		harmony_track.append(MetaMessage('time_signature', numerator=self.time_sig[0], 
 			denominator=self.time_sig[1], clocks_per_click=24, notated_32nd_notes_per_beat=8))
+		harmony_track.append(MetaMessage('key_signature', key=self.key_sig))
 		mid.tracks.append(harmony_track)
 
 		harmony_track.append(Message('program_change', channel=2, program=1, time=0))

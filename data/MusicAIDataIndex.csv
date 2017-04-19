@@ -7,9 +7,9 @@ Timber,Pitbull,5,opening,120,Abm,1.5,pop
 Timber,Pitbull,9,chorus_x2,120,Abm,1.5,pop
 Timber,Pitbull,5,vocalization,120,Abm,0.5,pop
 Timber,Pitbull,5,vocalization,120,Abm,0.5,pop
-Axel F,Harold Faltermeyer,4,theme,120,Dm,0,techno
 Pacific Rim Theme,,5,theme,80,Dm,1.5,epic
-Avenger’s Theme,,8,chorus_x2,125,Em,0,string
+Axel F,Harold Faltermeyer,4,theme,120,Dm,0,techno
+Avengers Theme,,8,chorus_x2,125,Em,0,string
 Hey Mama,,4,chorus,80,Em,0,pop
 My Heart,Different Heaven & EH!DE,5,verse,170,Gm,1,dubstep
 My Heart,Different Heaven & EH!DE,4,theme,170,Gm,0,dubstep
@@ -18,7 +18,7 @@ Nice Guys,,8,chorusx2,96,Gm,0,pop
 Scary Monsters and Nice Sprites,Skrillex,4,theme,132,Gm,0,dubstep
 Blue,,3,chorus,132,Gm,1,techno
 Blue,,3,chorus,132,Gm,1,techno
-Blue,,3,conclusion,132,Gm,0,techno
+Blue,,2,conclusion,132,Gm,0,techno
 Robot Bar Fight,,2,chorus,120,Bbm,0,techno
 Remember the Name,,4,hook,190,Cm,0,rap
 Dragostea Din Tea,,5,hook,132,C,2,pop
@@ -30,7 +30,7 @@ Immortals,Fall Out Boy,3,,113,F#m,1.5,pop
 Immortals,Fall Out Boy,13,chorus,114,F#m,2.5,pop
 Period,Chemistry,9,opening,132,C#m,2,rock
 Period,Chemistry,5,bridge,132,G,0.5,rock
-Period,Chemistry,9,bridge,132,G,0,rock
+Period,Chemistry,8,bridge,132,G,0,rock
 Period,Chemistry,9,chorus,132,C#m,2,rock
 Camp Rock,,6,chorus,150,Bbm,0,pop
 When We Stand Together,Nickelback,4,verse,95,Bbm,0,

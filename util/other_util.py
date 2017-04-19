@@ -1,35 +1,36 @@
 import numpy as np
+import csv
 
 # Check Equal: Assert that 2 arguments are equal. If they are not raise an exception with a error type
-def chEq(x, y, error_type):
+def chEq(x, y, error_type="unlabeled"):
 	if x != y:
 		message = "{} error: {} != {}".format(error_type, x, y)
 		raise Exception(message)
 
 # Check Greater than or Equal to
-def chGe(x, y, error_type):
+def chGe(x, y, error_type="unlabeled"):
 	if x < y:
 		message = "{} error: {} < {}".format(error_type, x, y)
 		raise Exception(message)
 
 # Check Greater than
-def chGt(x, y, error_type):
+def chGt(x, y, error_type="unlabeled"):
 	if x <= y:
 		message = "{} error: {} <= {}".format(error_type, x, y)
 		raise Exception(message)
 
 # Check Greater than or Equal to
-def chLe(x, y, error_type):
+def chLe(x, y, error_type="unlabeled"):
 	if x > y:
 		message = "{} error: {} > {}".format(error_type, x, y)
 		raise Exception(message)
 
-def chNotIn(val, my_collection, error_type):
+def chNotIn(val, my_collection, error_type="unlabeled"):
 	if val in my_collection:
 		message = "{} error: {} in {}".format(error_type, val, my_collection)
 		raise Exception(message)
 
-def chIn(val, my_collection, error_type):
+def chIn(val, my_collection, error_type="unlabeled"):
 	if val not in my_collection:
 		message = "{} error: {} not in {}".format(error_type, val, my_collection)
 		raise Exception(message)
@@ -157,3 +158,15 @@ def listToOccDict(l):
 		else:
 			result[val] = 1
 	return result
+
+def csvToMatrix(file_path):
+	result = None
+	with open(file_path, 'rb') as f:
+		reader = csv.reader(f)
+		result = list(reader)
+	return result
+
+def matrixToCsv(mat, file_path):
+	with open(file_path, 'wb') as f:
+		writer = csv.writer(f)
+		writer.writerows(mat)
