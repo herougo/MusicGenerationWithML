@@ -4,7 +4,7 @@ if '..' not in sys.path:
     sys.path.append('..')
 #from util.other_util import filterNonnegative, nonnegativeIndices, skewness, numDirectionChanges
 from util.other_util import *
-from util.sixteenth_array import SixteenthArray
+from util.sixteenth_array import *
 from util.music_theory import Harmony
 
 '''
@@ -49,7 +49,7 @@ def extractFeatures(sixteenth_arr):
     features["n_distinct_pitches"] = len(set(filtered_note_arr))
 
     features["interval_skewness"] = skewness(filtered_note_abs_diff)
-    features["is_major"] = 1 if 'm' in sixteenth_arr.key_sig else 0
+    features["is_major"] = 0 if 'm' in sixteenth_arr.key_sig else 1
     features["n_notes"] = len(filtered_note_arr)
     
     # Scale Dependent
@@ -88,9 +88,9 @@ def extractFeatures(sixteenth_arr):
 
     n_notes_in_chord = 0
     n_chords = len(chord_iteration)
-    ct_duration_sum = 0
+    ct_duration_sum = 0.0
     chord_duration_sum = 0
-    for notes, note_intervals, chord, chord_interval in chord_iteration:
+    for notes, note_intervals, chord, chord_interval in zip(*chord_iteration):
         longest_note_index = np.argmax(map(lambda x: x[1] - x[0], note_intervals))
         features["ratio_longest_note_in_chord"] += chord.fitChord(notes[longest_note_index])
 
@@ -110,7 +110,7 @@ def extractFeatures(sixteenth_arr):
                 # (note != prev_note is implied by the following if checks)
                 if prev_note_ct and (not note_ct):
                     features["ratio_non_ct_step_from_ct"] += 1
-                else note_ct and (not prev_note_ct):
+                elif note_ct and (not prev_note_ct):
                     features["ratio_non_ct_step_to_ct"] += 1
 
 
@@ -124,9 +124,11 @@ def extractFeatures(sixteenth_arr):
         chord_duration_sum += chord_interval[1] - chord_interval[0]
 
         features["ratio_ct_reached"] += (n_chord_tones > 0)
-        features["ratio_tonic_of_chord_reached"] = 0.0
+        features["ratio_tonic_of_chord_reached"] = (tonic_reached > 0)
         features["ratio_notes_fitting_chord"] += n_chord_tones
 
+    n_notes_in_chord = float(n_notes_in_chord)
+    n_chords = float(n_chords)
     # Denominator for ratios
     # per note
     features["ratio_notes_fitting_chord"] /= n_notes_in_chord
@@ -139,7 +141,7 @@ def extractFeatures(sixteenth_arr):
     features["ratio_ct_reached"] /= n_chords
 
     # per chord duration
-    features["ratio_notes_fitting_chord_w_duration"] = ct_duration_sum / chord_duration_sum
+    features["ratio_notes_fitting_chord_w_duration"] = float(ct_duration_sum) / chord_duration_sum
     
 
     return features

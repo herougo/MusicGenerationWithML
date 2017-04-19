@@ -103,6 +103,17 @@ class SixteenthArray:
         self.key_sig = key_sig
         self.n_bars = (len(self.melody_arr) + SIXTEENTH_BAR_LEN - 1) / SIXTEENTH_BAR_LEN
     
+    def splitBars(self):
+    	result = []
+    	for i in range(0, len(self.melody_arr), SIXTEENTH_BAR_LEN):
+    		bar_sixteenth_arr = SixteenthArray()
+    		bar_sixteenth_arr.loadFromArguments(
+    			self.melody_arr[i:i+SIXTEENTH_BAR_LEN],
+    			self.chords_arr[i:i+SIXTEENTH_BAR_LEN],
+    			key_sig=self.key_sig, bpm=self.bpm, time_sig=self.time_sig)
+    		result.append(bar_sixteenth_arr)
+    	return result
+
     # output: array of SixteenthArrays corresponding to splitting the SixteenthArray
     # by full bars of rest in the melody
     def splitByBarRest(self):
