@@ -12,7 +12,7 @@ To Do
 - [x] organize the data set
 - [x] generate random songs as bad songs for the music rating predictor
 - [x] implement features for a music rating predictor
-- [ ] create the data for the music rating model
+- [x] create the data for the music rating model
 - [ ] train the music rating model
 - [x] gather RL code
 - [ ] write the environment class for the RL agent
