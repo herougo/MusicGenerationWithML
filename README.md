@@ -4,7 +4,7 @@ This is a repository for generating music by combining different machine learnin
 
 All code was written by me except for the code in the "unused folder".
 
-To Do
+### To Do
 - [x] Understand the MIDI file format
 - [x] Write a MIDI parser
 - [x] debug the MIDI parser
