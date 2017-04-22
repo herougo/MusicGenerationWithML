@@ -47,6 +47,7 @@ def extractFeatures(sixteenth_arr):
     else:
         features["leap_proportion"] = 0
     features["n_distinct_pitches"] = len(set(filtered_note_arr))
+    features["max_min_distance"] = max(filtered_note_arr) - min(filtered_note_arr)
 
     features["interval_skewness"] = skewness(filtered_note_abs_diff)
     features["is_major"] = 0 if 'm' in sixteenth_arr.key_sig else 1
@@ -84,10 +85,10 @@ def extractFeatures(sixteenth_arr):
     # *** technically not correct
     last_note = filtered_note_arr[-1]
     last_chord = chord_iteration[2][-1]
-    features["last_note_in_chord"] = last_chord.fitChord(last_note)
+    features["last_note_in_chord"] = int(last_chord.fitChord(last_note))
 
     n_notes_in_chord = 0
-    n_chords = len(chord_iteration)
+    n_chords = len(chord_iteration[0])
     ct_duration_sum = 0.0
     chord_duration_sum = 0
     for notes, note_intervals, chord, chord_interval in zip(*chord_iteration):

@@ -13,11 +13,15 @@ To Do
 - [x] generate random songs as bad songs for the music rating predictor
 - [x] implement features for a music rating predictor
 - [x] create the data for the music rating model
-- [ ] train the music rating model
+- [x] train the music rating model
 - [x] gather RL code
 - [ ] write the environment class for the RL agent
 - [ ] try formulation 1
 - [ ] try formulation 2
+
+Music Rating Model Results
+
+A random tree model was trained on a data set of 285 points using a train, validation, test split of 0.6, 0.2, 0.2. The resulting validation set and test set accuracies accuracy were 95.7% and 98.2% respectively.
 
 
 Possible Reinforcement Learning Formulations:
