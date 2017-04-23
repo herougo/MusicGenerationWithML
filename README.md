@@ -2,7 +2,7 @@
 
 This is a repository for generating music by combining different machine learning algorithms. The main idea is to have a model for predicting whether a melody is good. You then use a reinforcement learning agent which gets feedback from that model to construct a policy which leads to creating good music. 
 
-All code was written by me except for the code in the "unused folder".
+All code was written by me except for the RL code in music_generation/reinforcement_learning.py.
 
 ### To Do
 - [x] Understand the MIDI file format
@@ -15,8 +15,9 @@ All code was written by me except for the code in the "unused folder".
 - [x] create the data for the music rating model
 - [x] train the music rating model
 - [x] gather RL code
-- [ ] write the environment class for the RL agent
-- [ ] try formulation 1
+- [x] write the environment class for the RL agent
+- [x] try formulation 1
+- [ ] investigate improving performance of the RL agent
 - [ ] try formulation 2
 
 ### Music Rating Model Results
