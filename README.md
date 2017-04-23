@@ -33,5 +33,6 @@ A random tree model was trained on a data set of 285 points using a train, valid
 5. 1 agent which decides the next note and duration in the moment
 
 ### Next Steps:
-1. have an agent which manages repitition of melodies
-2. have an agent which manages harmony structure
+1. try Monte Carlo Tree Search
+2. have an agent which manages repitition of melodies
+3. have an agent which manages harmony structure
