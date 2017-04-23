@@ -6,6 +6,7 @@ if '..' not in sys.path:
 from util.other_util import *
 from util.sixteenth_array import *
 from util.music_theory import Harmony
+import pandas as pd
 
 '''
 self.melody_arr = []
@@ -49,7 +50,10 @@ def extractFeatures(sixteenth_arr):
     features["n_distinct_pitches"] = len(set(filtered_note_arr))
     features["max_min_distance"] = max(filtered_note_arr) - min(filtered_note_arr)
 
-    features["interval_skewness"] = skewness(filtered_note_abs_diff)
+    skew = skewness(filtered_note_abs_diff)
+    if pd.isnull(skew):
+        skew = 3.5
+    features["interval_skewness"] = skew
     features["is_major"] = 0 if 'm' in sixteenth_arr.key_sig else 1
     features["n_notes"] = len(filtered_note_arr)
     

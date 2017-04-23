@@ -7,6 +7,12 @@ def chEq(x, y, error_type="unlabeled"):
 		message = "{} error: {} != {}".format(error_type, x, y)
 		raise Exception(message)
 
+# Check Not Equal: Assert that 2 arguments are not equal. If they are not raise an exception with a error type
+def chNe(x, y, error_type="unlabeled"):
+	if x == y:
+		message = "{} error: {} == {}".format(error_type, x, y)
+		raise Exception(message)
+
 # Check Greater than or Equal to
 def chGe(x, y, error_type="unlabeled"):
 	if x < y:
@@ -138,8 +144,11 @@ def numDirectionChanges(l):
 		return 0
 	direction_count = 0
 	new_direction_index = 1
-	while new_direction_index <= len_l and l[new_direction_index] == l[0]:
+	while new_direction_index < len_l and l[new_direction_index] == l[0]:
 		new_direction_index += 1
+
+	if new_direction_index >= len_l:
+		return 0
 	
 	prev_dir = l[new_direction_index] - l[0]
 	for i in range(2, len_l):
