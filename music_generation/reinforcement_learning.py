@@ -196,3 +196,74 @@ def qLearning(env, num_episodes, default_Q=None, discount_factor=1.0, alpha=0.5,
     
     return Q
 
+def myQLearning(env, num_episodes, policy, default_Q=None, discount_factor=1.0, alpha=0.5):
+    """
+    Q-Learning algorithm: Off-policy TD control. Finds the optimal greedy policy
+    while following an epsilon-greedy policy
+    
+    Args:
+        env: OpenAI environment.
+        num_episodes: Number of episodes to run for.
+        discount_factor: Lambda time discount factor.
+        alpha: TD learning rate.
+        epsilon: Chance the sample a random action. Float betwen 0 and 1.
+    
+    Returns:
+        A tuple (Q, episode_lengths).
+        Q is the optimal action-value function, a dictionary mapping state -> action values.
+    """
+    
+    # The final action-value function.
+    # A nested dictionary that maps state -> (action -> action-value).
+    if  default_Q == None:
+        Q = defaultdict(lambda: np.zeros(env.action_space.n))
+    else:
+        Q = default_Q
+
+    stats = {"returns": [], "max_delta": []}
+
+    # The policy we're following
+    # policy = makeEpsilonGreedyPolicy(Q, epsilon, env.action_space.n)
+    
+    for i_episode in range(num_episodes):
+        # Print out which episode we're on, useful for debugging.
+        if (i_episode + 1) % 100 == 0:
+            print("\rEpisode {}/{}.".format(i_episode + 1, num_episodes))
+            sys.stdout.flush()
+        
+        # Reset the environment and pick the first action
+        state = env.reset()
+        
+        # One step in the environment
+        # total_reward = 0.0
+        max_delta = -1
+        for t in itertools.count():
+            
+            # Take a step
+            action_probs = policy(state)
+            action = np.random.choice(np.arange(len(action_probs)), p=action_probs)
+            next_state, reward, done, _ = env.step(action)
+
+            # TD Update
+            best_next_action = np.argmax(Q[next_state])    
+            td_target = reward + discount_factor * Q[next_state][best_next_action]
+            td_delta = td_target - Q[state][action]
+            Q[state][action] += alpha * td_delta
+
+            # Update statistics
+            max_delta = max(max_delta, np.abs(td_delta))
+
+                
+            if done:
+                break
+                
+            state = next_state
+
+        # Update statistics
+        stats["returns"].append(reward)
+        stats["max_delta"].append(max_delta)
+
+
+    
+    return Q, stats
+
