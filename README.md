@@ -18,12 +18,16 @@ All code was written by me except for the RL code in music_generation/reinforcem
 - [x] write the environment class for the RL agent
 - [x] try formulation 1
 - [ ] investigate improving performance of the RL agent
+- [ ] create an "environment to MDP" function to create an MDP of the music generation dynamics
+- [ ] try dynamic programming on the MDP
+- [ ] create a MIDI file data formatter to transform MIDI data files in a format this readable for my algorithm
 - [ ] try formulation 2
 
 ### Music Rating Model Results
 
 A random tree model was trained on a data set of 285 points using a train, validation, test split of 0.6, 0.2, 0.2. The resulting validation set and test set accuracies accuracy were 95.7% and 98.2% respectively.
 
+See some results here: https://www.youtube.com/watch?v=3oOwJkIX-Uc
 
 ### Possible Reinforcement Learning Formulations:
 1. 1 bar of music with 8 eighth notes (agent determines the notes)
@@ -36,3 +40,6 @@ A random tree model was trained on a data set of 285 points using a train, valid
 1. try Monte Carlo Tree Search
 2. have an agent which manages repitition of melodies
 3. have an agent which manages harmony structure
+4. MORE DATA!!
+5. plot bigrams and trigrams of notes
+6. try dynamic programming on an approximation of the MDP
