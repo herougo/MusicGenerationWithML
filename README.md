@@ -27,7 +27,9 @@ All code was written by me except for the RL code in music_generation/reinforcem
 
 A random tree model was trained on a data set of 285 points using a train, validation, test split of 0.6, 0.2, 0.2. The resulting validation set and test set accuracies accuracy were 95.7% and 98.2% respectively.
 
-See some results here: https://www.youtube.com/watch?v=3oOwJkIX-Uc
+### Music Generation Model Results
+
+See some generated melodies here: https://www.youtube.com/watch?v=3oOwJkIX-Uc
 
 ### Possible Reinforcement Learning Formulations:
 1. 1 bar of music with 8 eighth notes (agent determines the notes)
